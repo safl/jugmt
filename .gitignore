@@ -1,3 +1,11 @@
+docs/_build
+*.pyc
+*.docx
+build
+dist
+src/jugmt.egg-info/
+output/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
