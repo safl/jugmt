@@ -58,6 +58,21 @@ jobs:
         name: stage1_documents-${{ matrix.os }}
         path: stage1
 
+    - name: Run -- tests
+      run: |
+        make test
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: coverage-html-${{ matrix.os }}
+        path: htmlcov
+
+    - name: Upload coverage to Coveralls
+      if: matrix.os == 'ubuntu-latest'
+      uses: coverallsapp/github-action@v1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Publish
       if: startsWith(github.ref, 'refs/tags/v') && matrix.os == 'ubuntu-latest'
       env:
