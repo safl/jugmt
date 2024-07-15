@@ -5,7 +5,6 @@ Command-Line Interface
 Produces .html and .json when given .docx documents
 """
 
-import sys
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
@@ -56,7 +55,3 @@ def main() -> int:
             document.validate()
 
     return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
