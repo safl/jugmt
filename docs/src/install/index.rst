@@ -11,8 +11,5 @@ Thus, install it by running::
 
   pipx install jugmt
 
-And ensure that you have the system-library ``libxml`` available.
-
-.. note::
-
-   Ensure that you have the system-library ``libxml`` available.
+And ensure that you have the system libraries ``libxml2`` and ``libxslt``
+available.
