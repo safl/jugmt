@@ -4,6 +4,7 @@ all: env uninstall build install test open
 
 env:
 	pipx install coveralls || true
+	pipx install pygount || true
 	pipx install pre-commit || true
 	pipx install build || true
 	pipx install twine || true

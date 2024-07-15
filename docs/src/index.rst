@@ -4,8 +4,17 @@ jugmt: JUst Give Me Tables
 **jugmt** is a minimalistic **spex** (SPecification EXtractor)
 **implementation** with a codebase less than **200** lines of Python::
 
-  Totals grouped by language (dominant language first):
-  python:         196 (100.00%)
+  ┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━┳━━━━━━┳━━━━━━━━━┳━━━━━━┓
+  ┃ Language          ┃ Files ┃     % ┃ Code ┃    % ┃ Comment ┃    % ┃
+  ┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━╇━━━━━━╇━━━━━━━━━╇━━━━━━┩
+  │ Python            │     7 │  63.6 │  160 │ 49.8 │      61 │ 19.0 │
+  │ JSON              │     1 │   9.1 │   58 │ 52.7 │       0 │  0.0 │
+  │ HTML+Django/Jinja │     1 │   9.1 │   46 │ 86.8 │       0 │  0.0 │
+  │ __empty__         │     1 │   9.1 │    0 │  0.0 │       0 │  0.0 │
+  │ __duplicate__     │     1 │   9.1 │    0 │  0.0 │       0 │  0.0 │
+  ├───────────────────┼───────┼───────┼──────┼──────┼─────────┼──────┤
+  │ Sum               │    11 │ 100.0 │  264 │ 54.5 │      61 │ 12.6 │
+  └───────────────────┴───────┴───────┴──────┴──────┴─────────┴──────┘
 
 The tool extracts figure information and tables from ``.docx`` files, generates
 **HTML** and **JSON**, and validates the **JSON** using a **JSON** schema.
