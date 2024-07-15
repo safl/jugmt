@@ -9,6 +9,9 @@ jugmt: JUst Give Me Tables
     :target: https://github.com/safl/jugmt/actions/workflows/bd.yaml
     :alt: Build Status
 
+.. image:: https://coveralls.io/repos/github/safl/jugmt/badge.svg?branch=main
+   :target: https://coveralls.io/github/safl/jugmt?branch=main
+
 .. image:: https://img.shields.io/pypi/v/jugmt
     :target: https://pypi.org/project/jugmt/
     :alt: PyPI

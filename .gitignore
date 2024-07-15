@@ -1,3 +1,5 @@
+*.lcov
+
 docs/_build
 *.pyc
 *.docx

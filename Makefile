@@ -19,7 +19,7 @@ uninstall:
 	pipx uninstall jugmt || true
 
 test:
-	pytest --cov=jugmt --cov-report=term-missing --cov-report=html
+	pytest --cov=jugmt --cov-report=lcov --cov-report=term-missing --cov-report=html tests
 
 open:
 	firefox /tmp/pytest-of-${USER}/pytest-current/test_cli_tool0/*.{html,json} || true
