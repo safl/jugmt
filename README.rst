@@ -1,6 +1,22 @@
 jugmt: JUst Give Me Tables
 ==========================
 
+.. image:: https://img.shields.io/badge/docs-GitHub%20Pages-blue
+    :target: https://safl.github.io/jugmt/
+    :alt: Documentation
+
+.. image:: https://github.com/safl/jugmt/actions/workflows/bd.yaml/badge.svg
+    :target: https://github.com/safl/jugmt/actions/workflows/bd.yaml
+    :alt: Build Status
+
+.. image:: https://img.shields.io/pypi/v/jugmt
+    :target: https://pypi.org/project/jugmt/
+    :alt: PyPI
+
+.. image:: https://img.shields.io/github/license/safl/jugmt
+    :target: https://opensource.org/licenses/LGPL-2.1
+    :alt: License
+
 **jugmt** is a minimalistic **spex** (SPecification EXtractor)
 **implementation** with a codebase less than **200** lines of Python::
 
