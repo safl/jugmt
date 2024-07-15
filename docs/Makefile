@@ -21,7 +21,7 @@ deps:
 
 apidoc:
 	rm -r src/api || true
-	poetry run sphinx-apidoc ../src/ -o src/api --separate --module-first --no-toc
+	poetry run sphinx-apidoc ../src/jugmt -o src/api --separate --module-first --no-toc -H api
 
 html:
 	mkdir -p $(BUILD_DIR)/html
