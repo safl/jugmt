@@ -3,6 +3,8 @@
 name: Deploy sphinx-doc generated HTML to Pages
 
 on:
+  schedule:
+  - cron: "0 0 * * *"
   # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
