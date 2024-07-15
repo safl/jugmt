@@ -3,13 +3,16 @@
 Install
 -------
 
-Since the tool is implemented in Python, distributed via PyPI and exercised
-from the command-line, then ``pipx`` does a great job at creating a
-virtual-environment for it and an entry-point to the command-line utility.
+The tool is implemented in Python, distributed via `pypi
+<https://pypi.org/project/jugmt/>`_ and exercised from the 
+:ref:`command-line <sec-usage>`, thus `pipx <https://pipx.pypa.io/stable/>`_ does a
+great job at creating a virtual-environment for it and an entry-point to the
+command-line utility.
 
-Thus, install it by running::
+Thus, install it, using `pipx <https://pipx.pypa.io/stable/>`_, using like so::
 
   pipx install jugmt
 
-And ensure that you have the system libraries ``libxml2`` and ``libxslt``
-available.
+.. note::
+  ``pipx`` does not install the system libraries ``libxml2`` and ``libxslt``
+  that the tool depends upon, so ensure that you have these installed.
