@@ -5,7 +5,7 @@ description = "JUst Give Me Tables"
 authors = [
     { name = "Simon A. F. Lund", email = "os@safl.dk" }
 ]
-license = { text = "BSD-3-Clause" }
+license = { text = "LGPL-2.1-only" }
 dependencies = [
     "pytest",
     "jinja2",
