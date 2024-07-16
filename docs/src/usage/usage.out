@@ -1,0 +1,12 @@
+usage: jugmt [-h] [--output OUTPUT] [--skip-validate] document [document ...]
+
+Extract table information from .docx documents
+
+positional arguments:
+  document         Path to one or more .docx document(s)
+
+options:
+  -h, --help       show this help message and exit
+  --output OUTPUT  Directory where the output will be saved
+  --skip-validate  Skip validation if this flag is set.
+
