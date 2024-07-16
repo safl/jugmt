@@ -19,6 +19,9 @@ deps:
 	poetry config keyring.enabled false
 	poetry install --no-root
 
+kmdo:
+	kmdo .
+
 apidoc:
 	rm -r src/api || true
 	poetry run sphinx-apidoc ../src/jugmt -o src/api --separate --module-first --no-toc -H api

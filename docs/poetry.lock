@@ -254,6 +254,16 @@ MarkupSafe = ">=2.0"
 i18n = ["Babel (>=2.7)"]
 
 [[package]]
+name = "kmdo"
+version = "1.0.6"
+description = "Command-line tool for auto generating command output"
+optional = false
+python-versions = "*"
+files = [
+    {file = "kmdo-1.0.6.tar.gz", hash = "sha256:2af9375c33fcd4a615c020ff8b192de428565840e5388cba02ce92ac89a97487"},
+]
+
+[[package]]
 name = "markupsafe"
 version = "2.1.5"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -620,4 +630,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "0af2a511b0e81003be3b4f0003a8b9462abaaa5b226b27c2b81fbb7dd193e7b9"
+content-hash = "b027d552e408fc084954396d6f33934ba687d96968f4a287bcc6ffd6474e7346"
