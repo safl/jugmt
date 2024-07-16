@@ -6,7 +6,7 @@ from jugmt.document import Document
 
 def test_module(tmp_path):
 
-    paths = list(Path("documents").resolve().glob("*.docx"))
+    paths = list(Path("example").resolve().glob("*.docx"))
     assert len(paths) > 0, "No documents/*.docx available for testing"
 
     for path in paths:
