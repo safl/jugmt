@@ -5,6 +5,7 @@ Command-Line Interface
 Produces .html and .json when given .docx documents
 """
 
+import json
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
@@ -41,15 +42,16 @@ def main() -> int:
     args = parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
 
-    for path in args.document:
-        document = Document(path)
-        document.extract_figures()
+    with (Path.cwd() / "document.figures.schema.json").open("w") as schema_file:
+        json.dump(Document.json_schema(), schema_file, indent=4)
 
-        (args.output / document.path.stem).with_suffix(".html").write_text(
-            document.to_html()
-        )
+    for path in args.document:
+        document, errors = Document().from_docx(path)
+
+        (args.output / path.stem).with_suffix(".html").write_text(document.to_html())
+
         json_str = document.to_json()
-        (args.output / document.path.stem).with_suffix(".json").write_text(json_str)
+        (args.output / path.stem).with_suffix(".json").write_text(json_str)
 
         if not args.skip_validate:
             document.validate()

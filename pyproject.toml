@@ -7,11 +7,12 @@ authors = [
 ]
 license = { text = "LGPL-2.1-only" }
 dependencies = [
+    "dataclasses-jsonschema",
     "jinja2",
     "jsonschema",
     "pytest",
     "pytest-cov",
-    "python-docx"
+    "python-docx",
 ]
 readme = { file = "README.rst", content-type = "text/x-rst" }
 

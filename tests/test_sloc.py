@@ -35,4 +35,4 @@ def test_sloc():
 
     assert sloc > 10, "Invalid sloc-count"
 
-    assert project_sloc() < 300, "Too Much code; please simplfy..."
+    assert project_sloc() < 500, "Too Much code; please simplfy..."

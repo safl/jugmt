@@ -6,7 +6,7 @@ Schema
 The generated **JSON** document is validated against a **JSON** schema. You can
 use the path:
 
-* https://raw.githubusercontent.com/safl/jugmt/main/src/jugmt/schema/stage1.schema.json
+* https://raw.githubusercontent.com/safl/jugmt/main/src/jugmt/schema/document.figures.schema.json
 
 The schema is provided verbatim in the :ref:`sec-schema-content` section. A
 loose description of the document structure is provided below to convey a brief
@@ -57,5 +57,5 @@ mental picture of the structure.
 Content
 -------
 
-.. literalinclude:: ../../../src/jugmt/schema/stage1.schema.json
+.. literalinclude:: ../../../src/jugmt/schema/document.figures.schema.json
    :language: json

@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>{{ document.path.stem }}</title>
+<title>{{ document.stem }}</title>
 <style>
 table {
     border-collapse: collapse;
@@ -25,9 +25,9 @@ caption {
 
 {% macro render_table(table) %}
 <table>
-{% for row in table or []%}
+{% for row in table.rows or []%}
 <tr>
-  {% for col in row %}
+  {% for col in row.cells %}
   <td>
     {{ col["text"] }}
     {% for nested_table in col["tables"] %}

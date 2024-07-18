@@ -10,15 +10,14 @@ def test_module(tmp_path):
     assert len(paths) > 0, "No documents/*.docx available for testing"
 
     for path in paths:
-        document = Document(path)
-        document.extract_figures()
+        document, errors = Document().from_docx(path)
 
-        json_str = document.to_json()
-        assert json_str, "Failed producing a string of JSON"
+        document_json_str = document.to_json()
+        assert document_json_str, "Failed producing a string of JSON"
 
-        html_str = document.to_html()
-        assert html_str, "Failed producing a string of HTML"
+        document_html_str = document.to_html()
+        assert document_html_str, "Failed producing a string of HTML"
 
         document.validate()
 
-        assert len(document.figures) == 2, "Unexpected about of figures in document"
+        assert len(document.figures) == 2, "Unexpected amouni of figures in document"

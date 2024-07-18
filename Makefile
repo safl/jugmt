@@ -1,25 +1,34 @@
+PROJECT_NAME=jugmt
+
 .PHONY: all env build install uninstall test open format release
 
 all: env uninstall build install test open
 
 env:
+	pipx install build || true
 	pipx install coveralls || true
 	pipx install pygount || true
 	pipx install pre-commit || true
-	pipx install build || true
 	pipx install twine || true
+
+clean:
+	rm -r build || true
+	rm -r dist|| true
+	rm -r htmlcov || true
+	rm -r .mypy_cache || true
+	rm -r .pytest_cache || true
 
 build:
 	pyproject-build
 
 install:
-	pipx install . --include-deps
+	pipx install . --include-deps --force
 
 uninstall:
-	pipx uninstall jugmt || true
+	pipx uninstall $(PROJECT_NAME) || true
 
 test:
-	pytest --cov=jugmt --cov-report=lcov --cov-report=term-missing --cov-report=html tests
+	pytest --cov=$(PROJECT_NAME) --cov-report=lcov --cov-report=term-missing --cov-report=html -vvs tests
 
 open:
 	firefox /tmp/pytest-of-${USER}/pytest-current/test_cli_tool0/*.{html,json} || true

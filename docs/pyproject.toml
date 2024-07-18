@@ -5,8 +5,9 @@ description = ""
 authors = ["Simon A. F. Lund <os@safl.dk>"]
 
 [tool.poetry.dependencies]
-kmdo = "1.0.6"
+dataclasses_jsonschema = "2.16.0"
 furo = "2024.5.6"
+kmdo = "1.0.6"
 python = "^3.9"
 sphinx = "7.3.7"
 sphinx_autodoc_typehints = "2.2.2"

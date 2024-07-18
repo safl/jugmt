@@ -2,13 +2,14 @@ jugmt: JUst Give Me Tables
 ==========================
 
 **jugmt** is a minimalistic **spex** (SPecification EXtractor)
-**implementation** with a codebase less than **200** lines of Python:
+**implementation** with a codebase less than **300** lines of Python:
 
 .. literalinclude:: sloc.out
    :language: text
 
-The tool extracts figure information and tables from ``.docx`` files, generates
-**HTML** and **JSON**, and validates the **JSON** using a **JSON** schema.
+The tool extracts tables and figure information from ``.docx`` files, generates
+**HTML** and **JSON**, and validates the **JSON** using a
+:ref:`schema <sec-schema>`.
 
 When running the tool on a collection of NVMe specification documents, including
 Base, Boot, MI, NVM, ZNS, KV, PCI, RDMA, and TCP, it consumes a total of **5
@@ -23,4 +24,3 @@ a single thread for all documents combined.
    install/index.rst
    usage/index.rst
    schema/index.rst
-   api/jugmt.rst

@@ -1,130 +1,243 @@
 """
-Encapsulation of Document meta-data, .docx
+A representation of Figure data extracted from a ``.docx`` document
+
+This is intended to be used with NVMe Specfication Documents, however, if your
+assumptions match those below, then it will work with your documents as well.
 
 Assumptions
 ===========
 
-* Every NVMe specification document has a TOC with a List of figures
+* The first cell in the first row contains a Figure caption on the form
+
+  - 'Figure <figure_number>: <description>'
+
+* The list of figures contains figure captions on the form
+
+  - 'Figure <figure_number>: <description> <page_nr>'
 """
+
+from __future__ import annotations
 
 import json
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field, is_dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 import docx
-from docx.table import Table
+import docx.table
+from dataclasses_jsonschema import JsonSchemaMixin
 from jinja2 import Environment, PackageLoader, select_autoescape
 from jsonschema import validate
 
-from jugmt.schema.checker import get_schema
-
-REGEX_FIGURE_IDENTIFIER = (
-    r"(?P<title>Figure\s+(?P<figure_nr>\d+):(?P<description>.*)\s)(?P<page_nr>\d+)"
-)
-
-TEMPLATE_HTML = "document.html.jinja2"
+import jugmt
 
 
-def table_to_dict(table: Table) -> List[List[Dict[str, Any]]]:
-    """
-    Returns a JSON serializable form of the given docx.table.Table.
+def to_dict(obj):
+    """Recursively applies asdict()"""
 
-    The table is represented as a list-of-lists, thus, it can be irregular. This is
-    intentional, as the tables coming from the input can be irregular, thus, we need the
-    representation to do a lint check for this.
-    """
+    if is_dataclass(obj):
+        return {k: to_dict(v) for k, v in asdict(obj).items()}
+    elif isinstance(obj, set):
+        return [to_dict(i) for i in obj]
+    elif isinstance(obj, list):
+        return [to_dict(i) for i in obj]
+    elif isinstance(obj, dict):
+        return {k: to_dict(v) for k, v in obj.items()}
+    else:
+        return obj
 
-    rows = []
-    for row in table.rows:
-        cols = []
-        for cell in row.cells:
-            cols.append(
-                {
-                    "text": str(cell.text),
-                    "tables": [
-                        table_to_dict(nested_table) for nested_table in cell.tables
-                    ],
-                }
-            )
-        rows.append(cols)
 
-    return rows
+def pascal_to_snake(name):
+    """Convert a PascalCase to snake_case"""
+    return re.sub(r"(?<!^)(?=[A-Z])", "_", name).lower()
+
+
+def snake_to_pascal(name):
+    """Convert snake_case to PascalCase"""
+
+    return "".join(word.capitalize() for word in name.split("_"))
 
 
 @dataclass
-class Figure(object):
+class Cell(JsonSchemaMixin):
+    key: str = "cell"
+    text: str = field(default_factory=str)
+    tables: List[Table] = field(default_factory=list)
+
+
+@dataclass
+class Row(JsonSchemaMixin):
+    key: str = "row"
+    cells: List[Cell] = field(default_factory=list)
+
+
+@dataclass
+class Table(JsonSchemaMixin):
+    key: str = "table"
+    rows: List[Row] = field(default_factory=list)
+
+    @classmethod
+    def from_docx_table(cls, docx_table: docx.table.Table):
+
+        table = cls()
+
+        for docx_row in docx_table.rows:
+            row = Row()
+            table.rows.append(row)
+
+            for docx_cell in docx_row.cells:
+                cell = Cell(
+                    text=str(docx_cell.text),
+                    tables=[
+                        Table.from_docx_table(nested_table)
+                        for nested_table in docx_cell.tables
+                    ],
+                )
+                row.cells.append(cell)
+
+        return table
+
+
+@dataclass
+class Figure(JsonSchemaMixin):
     """
-    A figure as represented in the NVMe specification documents.
+    A figure as captioned in the NVMe Specification Documents.
+
+    Ensuring that the 'figure' being "enriched" is always available. Providing a
+    factory-method, constructing the class using 'figure' information, and enriched data
+    from 'match.groupdict()'
     """
 
+    REGEX_FIGURE_CAPTION = (
+        r"^(?P<caption>Figure\s+(?P<figure_nr>\d+)\s*:"
+        r"\s*(?P<description>.*?))(?P<page_nr>\d+)?$"
+    )
+
+    key: str  # Utilized fo de-serialization and document location
     figure_nr: int  # Figure as numbered in the specification document
-    page_nr: int  # The page, in the document, that the figure starts on
-    title: str  # The entire figure title
+    caption: str  # The entire figure title
     description: str  # The part of figure title without the "Fig X:" prefix
 
-    table: Optional[List[List[Dict[str, Any]]]] = None
+    page_nr: Optional[int] = None
+    table: Optional[Table] = None
+
+    @classmethod
+    def from_figure_caption(cls, text: str):
+
+        match = re.match(Figure.REGEX_FIGURE_CAPTION, text)
+        if not match:
+            return None
+
+        args = {}
+        args["key"] = pascal_to_snake(cls.__name__)
+        args["figure_nr"] = int(match.group("figure_nr"))
+        args["caption"] = match.group("caption").strip()
+        args["description"] = match.group("description").strip()
+        args["page_nr"] = (
+            int(match.group("page_nr")) if match.group("page_nr") else None
+        )
+        args["table"] = None
+
+        return cls(**args)
 
 
-class Document(object):
+@dataclass
+class Meta(JsonSchemaMixin):
+    key: str = "meta"
+    version: str = jugmt.__version__
+    stem: str = field(default_factory=str)
+
+
+@dataclass
+class Document(JsonSchemaMixin):
     """
     Wrapper of the docx.Document with additional path meta-data and figures with tabular
     data converted to a JSON serializable format
     """
 
-    def __init__(self, path: Path):
-        self.path = path
-        self.docx = docx.Document(path)
-        self.figures: List[Any] = []
+    TEMPLATE_HTML = "document.figures.html.jinja2"
 
-    def extract_figures(self):
+    meta: Meta = field(default_factory=Meta)
+    figures: List[Figure] = field(default_factory=list)
+
+    @classmethod
+    def from_docx(cls, path: Path):
         """
         Populate self.figures with figures, and their associated tabular data when
         available, found in self.docx
         """
 
-        # Convert all tables to serializable format, and when doing so, built a map of
-        #
-        #   figure-description => figure
-        #
-        # By doing so, then lookup for the matching the figure is much faster
-        tables = {}  # map "description" => "table"
-        for docx_table in self.docx.tables:
-            key = ("".join(docx_table.rows[0].cells[0].text.split(":")[1:])).strip()
-            tables[key] = table_to_dict(docx_table)
+        docx_document = docx.Document(path)
+        figures = {}
 
+        errors: Dict[str, List[tuple]] = {
+            "captions": [],
+            "tof_entries": [],
+        }
+
+        # Add tabular figures -- page_nr unavailable
+        for table_nr, docx_table in enumerate(docx_document.tables, 1):
+            caption = str(docx_table.rows[0].cells[0].text).strip()
+
+            figure = Figure.from_figure_caption(caption)
+            if not figure:
+                errors["captions"].append(
+                    (table_nr, caption, "Does not match figure caption assumptions")
+                )
+                continue
+
+            if figure.figure_nr in figures:
+                errors["captions"].append((table_nr, caption, "Duplicate"))
+                continue
+
+            # figure.table = table_to_dict(docx_table)
+            figure.table = Table.from_docx_table(docx_table)
+            figures[figure.figure_nr] = figure
+
+        # Update tabular figures with page_nr
+        # Add non-fabular figures
+        # Check table-of-figure description validity
         prev = cur = None
-        for paragraph in self.docx.paragraphs:
+        for paragraph in docx_document.paragraphs:
             cur = paragraph.style.name
 
-            # We exit early to avoid scanning the entire document, since we known that
+            # We exit early to avoid scanning the entire document, since we know that
             # once we are looking at a "table of figures" paragraph, then once we see
             # one that is not, then no more will arrive
             if prev == "table of figures" and cur != "table of figures":
                 break
             prev = cur
-
-            # Skip paragraphs before "table of figures"
             if paragraph.style.name != "table of figures":
                 continue
 
             # Check whether the paragraph is a reference to a figure
-            text = paragraph.text.strip()
-            match = re.match(REGEX_FIGURE_IDENTIFIER, text)
-            if not match:
+            caption = paragraph.text.strip()
+            figure = Figure.from_figure_caption(caption)
+            if not figure:
+                errors["tof_entries"].append(
+                    (caption, "Does not match figure assumptions")
+                )
                 continue
 
-            # Construct figure and lookup whether a table exists for it
-            figure = Figure(
-                figure_nr=int(match.group("figure_nr")),
-                page_nr=int(match.group("page_nr")),
-                title=match.group("title").strip(),
-                description=match.group("description").strip(),
-            )
-            figure.table = tables.get(figure.description, None)
+            if not figure.page_nr:
+                errors["tof_entries"].append((caption, "Is missing <page_nr>"))
+                continue
 
-            self.figures.append(figure)
+            existing = figures.get(figure.figure_nr, None)
+            if existing:
+                existing.page_nr = figure.page_nr
+                if figure.description not in existing.description:
+                    errors["tof_entires"].append(
+                        (
+                            caption,
+                            f"({existing.description}) != {figure.description}",
+                        )
+                    )
+            else:
+                figures[figure.figure_nr] = figure
+
+        return cls(meta=Meta(stem=path.stem), figures=list(figures.values())), errors
 
     def to_html(self) -> str:
         """Returns the document as a HTML-formatted string"""
@@ -133,28 +246,18 @@ class Document(object):
             loader=PackageLoader("jugmt", "templates"),
             autoescape=select_autoescape(["html", "xml"]),
         )
-        template = env.get_template(TEMPLATE_HTML)
+        template = env.get_template(Document.TEMPLATE_HTML)
 
         return template.render(document=self)
 
     def to_json(self) -> str:
         """Returns the document as a JSON-formatted string"""
 
-        return json.dumps(
-            {
-                "path": str(self.path),
-                "figures": [asdict(fig) for fig in self.figures],
-            },
-            indent="\t",
-        )
+        return json.dumps(to_dict(self), indent=4)
 
     def validate(self):
         """Validate the document using the schema and the Draft202012 Validator"""
 
         json_str = self.to_json()
-        schema = get_schema()
 
-        validate(
-            instance=json.loads(json_str),
-            schema=schema,
-        )
+        validate(instance=json.loads(json_str), schema=Document.json_schema())

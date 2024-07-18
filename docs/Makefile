@@ -7,9 +7,9 @@ VENV_NAME = .venv
 VENV = . ${VENV_NAME}/bin/activate && 
 PYTHON = ${VENV} python3
 
-default: clean deps apidoc html serve
+default: clean deps html serve
 
-.PHONY: clean deps apidoc html linkcheck serve
+.PHONY: clean deps html linkcheck serve
 
 clean:
 	rm -fr $(BUILD_DIR) || true	
@@ -21,10 +21,6 @@ deps:
 
 kmdo:
 	kmdo .
-
-apidoc:
-	rm -r src/api || true
-	poetry run sphinx-apidoc ../src/jugmt -o src/api --separate --module-first --no-toc -H api
 
 html:
 	mkdir -p $(BUILD_DIR)/html
