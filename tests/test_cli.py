@@ -16,3 +16,17 @@ def test_cli_tool(tmp_path):
         )
 
         assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
+
+
+def test_cli_tool_dump_schema(tmp_path):
+
+    result = run(["jugmt", "--dump-schema"], capture_output=True, text=True)
+
+    assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
+
+
+def test_cli_tool_missing_args(tmp_path):
+
+    result = run(["jugmt"], capture_output=True, text=True)
+
+    assert result.returncode != 0, f"Expected failure, but got: {result.stderr}"
