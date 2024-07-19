@@ -9,7 +9,7 @@ PYTHON = ${VENV} python3
 
 default: clean deps html serve
 
-.PHONY: clean deps html linkcheck serve
+.PHONY: clean deps kmdo html linkcheck serve
 
 clean:
 	rm -fr $(BUILD_DIR) || true	
