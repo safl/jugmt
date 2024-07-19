@@ -5,7 +5,7 @@
             "$ref": "#/definitions/Meta",
             "default": {
                 "key": "meta",
-                "version": "0.4.1",
+                "version": "0.4.2",
                 "stem": ""
             }
         },
@@ -29,14 +29,14 @@
                 },
                 "version": {
                     "type": "string",
-                    "default": "0.4.1"
+                    "default": "0.4.2"
                 },
                 "stem": {
                     "type": "string",
                     "default": ""
                 }
             },
-            "description": "Meta(key: 'str' = 'meta', version: 'str' = '0.4.1', stem: 'str' = <factory>)"
+            "description": "Meta(key: 'str' = 'meta', version: 'str' = '0.4.2', stem: 'str' = <factory>)"
         },
         "Figure": {
             "type": "object",
