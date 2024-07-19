@@ -39,7 +39,7 @@ jobs:
     - name: Build pages
       run: |
         cd docs
-        make clean deps apidoc html
+        make clean deps html
 
     - name: List output files
       run: ls -R docs/_build
