@@ -11,6 +11,8 @@ from pathlib import Path
 
 from jugmt.document import Document
 
+SCHEMA_FILENAME = "document.figures.schema.json"
+
 
 def parse_args() -> Namespace:
     """Return command-line arguments"""
@@ -19,21 +21,30 @@ def parse_args() -> Namespace:
         description="Extract table information from .docx documents"
     )
     parser.add_argument(
-        "document", nargs="+", type=Path, help="Path to one or more .docx document(s)"
+        "document", nargs="*", type=Path, help="path to one or more .docx document(s)"
     )
     parser.add_argument(
         "--output",
         type=Path,
-        help="Directory where the output will be saved",
+        help="directory where the output will be saved",
         default=Path("output"),
     )
     parser.add_argument(
         "--skip-validate",
         action="store_true",
-        help="Skip validation if this flag is set.",
+        help="skip validation if this flag is set.",
+    )
+    parser.add_argument(
+        "--dump-schema",
+        action="store_true",
+        help=f"write schema to f{SCHEMA_FILENAME} and exit",
     )
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    if not args.document and not args.dump_schema:
+        parser.error("the following arguments are required: document")
+
+    return args
 
 
 def main() -> int:
@@ -42,8 +53,9 @@ def main() -> int:
     args = parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
 
-    with (Path.cwd() / "document.figures.schema.json").open("w") as schema_file:
-        json.dump(Document.json_schema(), schema_file, indent=4)
+    if args.dump_schema:
+        with (Path.cwd() / SCHEMA_FILENAME).open("w") as schema_file:
+            json.dump(Document.json_schema(), schema_file, indent=4)
 
     for path in args.document:
         document, errors = Document().from_docx(path)
