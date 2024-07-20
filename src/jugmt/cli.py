@@ -55,17 +55,13 @@ def main() -> int:
 
     if args.dump_schema:
         with (Path.cwd() / SCHEMA_FILENAME).open("w") as schema_file:
-            json.dump(Document.json_schema(), schema_file, indent=4)
+            json.dump(Document.schema(), schema_file, indent=4)
 
     for path in args.document:
         document, errors = Document().from_docx(path)
 
         (args.output / path.stem).with_suffix(".html").write_text(document.to_html())
 
-        json_str = document.to_json()
-        (args.output / path.stem).with_suffix(".json").write_text(json_str)
-
-        if not args.skip_validate:
-            document.validate()
+        (args.output / path.stem).with_suffix(".json").write_text(document.json())
 
     return 0

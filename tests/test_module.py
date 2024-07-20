@@ -18,6 +18,6 @@ def test_module(tmp_path):
         document_html_str = document.to_html()
         assert document_html_str, "Failed producing a string of HTML"
 
-        document.validate()
+        document.check()
 
         assert len(document.figures) == 2, "Unexpected amouni of figures in document"

@@ -16,36 +16,15 @@ Assumptions
   - 'Figure <figure_number>: <description> <page_nr>'
 """
 
-from __future__ import annotations
-
-import json
 import re
-from dataclasses import asdict, dataclass, field, is_dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import ClassVar, Dict, List, Optional
 
 import docx
-import docx.table
-from dataclasses_jsonschema import JsonSchemaMixin
 from jinja2 import Environment, PackageLoader, select_autoescape
-from jsonschema import validate
+from pydantic import BaseModel, Field, ValidationError
 
 import jugmt
-
-
-def to_dict(obj):
-    """Recursively applies asdict()"""
-
-    if is_dataclass(obj):
-        return {k: to_dict(v) for k, v in asdict(obj).items()}
-    elif isinstance(obj, set):
-        return [to_dict(i) for i in obj]
-    elif isinstance(obj, list):
-        return [to_dict(i) for i in obj]
-    elif isinstance(obj, dict):
-        return {k: to_dict(v) for k, v in obj.items()}
-    else:
-        return obj
 
 
 def pascal_to_snake(name):
@@ -59,27 +38,23 @@ def snake_to_pascal(name):
     return "".join(word.capitalize() for word in name.split("_"))
 
 
-@dataclass
-class Cell(JsonSchemaMixin):
+class Cell(BaseModel):
     key: str = "cell"
-    text: str = field(default_factory=str)
-    tables: List[Table] = field(default_factory=list)
+    text: str = Field(default_factory=str)
+    tables: List["Table"] = Field(default_factory=list)
 
 
-@dataclass
-class Row(JsonSchemaMixin):
+class Row(BaseModel):
     key: str = "row"
-    cells: List[Cell] = field(default_factory=list)
+    cells: List[Cell] = Field(default_factory=list)
 
 
-@dataclass
-class Table(JsonSchemaMixin):
+class Table(BaseModel):
     key: str = "table"
-    rows: List[Row] = field(default_factory=list)
+    rows: List[Row] = Field(default_factory=list)
 
     @classmethod
     def from_docx_table(cls, docx_table: docx.table.Table):
-
         table = cls()
 
         for docx_row in docx_table.rows:
@@ -99,8 +74,7 @@ class Table(JsonSchemaMixin):
         return table
 
 
-@dataclass
-class Figure(JsonSchemaMixin):
+class Figure(BaseModel):
     """
     A figure as captioned in the NVMe Specification Documents.
 
@@ -109,7 +83,7 @@ class Figure(JsonSchemaMixin):
     from 'match.groupdict()'
     """
 
-    REGEX_FIGURE_CAPTION = (
+    REGEX_FIGURE_CAPTION: ClassVar[str] = (
         r"^(?P<caption>Figure\s+(?P<figure_nr>\d+)\s*:"
         r"\s*(?P<description>.*?))(?P<page_nr>\d+)?$"
     )
@@ -124,7 +98,6 @@ class Figure(JsonSchemaMixin):
 
     @classmethod
     def from_figure_caption(cls, text: str):
-
         match = re.match(Figure.REGEX_FIGURE_CAPTION, text)
         if not match:
             return None
@@ -142,24 +115,22 @@ class Figure(JsonSchemaMixin):
         return cls(**args)
 
 
-@dataclass
-class Meta(JsonSchemaMixin):
+class Meta(BaseModel):
     key: str = "meta"
     version: str = jugmt.__version__
-    stem: str = field(default_factory=str)
+    stem: str = Field(default_factory=str)
 
 
-@dataclass
-class Document(JsonSchemaMixin):
+class Document(BaseModel):
     """
     Wrapper of the docx.Document with additional path meta-data and figures with tabular
     data converted to a JSON serializable format
     """
 
-    TEMPLATE_HTML = "document.figures.html.jinja2"
+    TEMPLATE_HTML: ClassVar[str] = "document.figures.html.jinja2"
 
-    meta: Meta = field(default_factory=Meta)
-    figures: List[Figure] = field(default_factory=list)
+    meta: Meta = Field(default_factory=Meta)
+    figures: List[Figure] = Field(default_factory=list)
 
     @classmethod
     def from_docx(cls, path: Path):
@@ -191,7 +162,6 @@ class Document(JsonSchemaMixin):
                 errors["captions"].append((table_nr, caption, "Duplicate"))
                 continue
 
-            # figure.table = table_to_dict(docx_table)
             figure.table = Table.from_docx_table(docx_table)
             figures[figure.figure_nr] = figure
 
@@ -253,11 +223,13 @@ class Document(JsonSchemaMixin):
     def to_json(self) -> str:
         """Returns the document as a JSON-formatted string"""
 
-        return json.dumps(to_dict(self), indent=4)
+        return self.model_dump_json(indent=4)
 
-    def validate(self):
-        """Validate the document using the schema and the Draft202012 Validator"""
+    def check(self):
+        try:
+            self.validate(self.dict())
+        except ValidationError as e:
+            print(e)
+            return False
 
-        json_str = self.to_json()
-
-        validate(instance=json.loads(json_str), schema=Document.json_schema())
+        return True
