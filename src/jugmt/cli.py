@@ -21,7 +21,7 @@ def parse_args() -> Namespace:
         description="Extract table information from .docx documents"
     )
     parser.add_argument(
-        "document", nargs="*", type=Path, help="path to one or more .docx document(s)"
+        "document", nargs="+", type=Path, help="path to one or more .docx document(s)"
     )
     parser.add_argument(
         "--output",
@@ -35,16 +35,12 @@ def parse_args() -> Namespace:
         help="skip validation if this flag is set.",
     )
     parser.add_argument(
-        "--dump-schema",
+        "--skip-dump-schema",
         action="store_true",
-        help=f"write schema to f{SCHEMA_FILENAME} and exit",
+        help=f"skip dumping the schema({SCHEMA_FILENAME})",
     )
 
-    args = parser.parse_args()
-    if not args.document and not args.dump_schema:
-        parser.error("the following arguments are required: document")
-
-    return args
+    return parser.parse_args()
 
 
 def main() -> int:
@@ -53,15 +49,23 @@ def main() -> int:
     args = parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
 
-    if args.dump_schema:
-        with (Path.cwd() / SCHEMA_FILENAME).open("w") as schema_file:
+    if not args.skip_dump_schema:
+        with (args.output / SCHEMA_FILENAME).open("w") as schema_file:
             json.dump(Document.schema(), schema_file, indent=4)
 
     for path in args.document:
         document, errors = Document().from_docx(path)
 
-        (args.output / path.stem).with_suffix(".html").write_text(document.to_html())
+        (args.output / path.stem).with_suffix(".figures.html").write_text(
+            document.to_html()
+        )
+        (args.output / path.stem).with_suffix(".figures.json").write_text(
+            document.json()
+        )
 
-        (args.output / path.stem).with_suffix(".json").write_text(document.json())
+        if args.skip_validate:
+            continue
+
+        document.check()
 
     return 0

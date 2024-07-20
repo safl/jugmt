@@ -18,11 +18,31 @@ def test_cli_tool(tmp_path):
         assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
 
 
-def test_cli_tool_dump_schema(tmp_path):
+def test_cli_tool_skip_dump_schema(tmp_path):
 
-    result = run(["jugmt", "--dump-schema"], capture_output=True, text=True)
+    paths = list(Path("example").resolve().glob("*.docx"))
+    assert len(paths) > 0, "No documents/*.docx available for testing"
 
-    assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
+    for path in paths:
+
+        result = run(
+            ["jugmt", f"{path}", "--skip-dump-schema"], capture_output=True, text=True
+        )
+
+        assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
+
+
+def test_cli_tool_skip_validate(tmp_path):
+    paths = list(Path("example").resolve().glob("*.docx"))
+    assert len(paths) > 0, "No documents/*.docx available for testing"
+
+    for path in paths:
+
+        result = run(
+            ["jugmt", f"{path}", "--skip-validate"], capture_output=True, text=True
+        )
+
+        assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
 
 
 def test_cli_tool_missing_args(tmp_path):
