@@ -20,23 +20,10 @@ jugmt: JUst Give Me Tables
     :target: https://opensource.org/licenses/LGPL-2.1
     :alt: License
 
-**jugmt** is a minimalistic **spex** (SPecification EXtractor)
-**implementation** with a codebase less than **300** lines of Python::
-
-  ┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━┳━━━━━━┳━━━━━━━━━┳━━━━━━┓
-  ┃ Language          ┃ Files ┃     % ┃ Code ┃    % ┃ Comment ┃    % ┃
-  ┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━╇━━━━━━╇━━━━━━━━━╇━━━━━━┩
-  │ Python            │     8 │  66.7 │  234 │ 54.2 │      68 │ 15.7 │
-  │ JSON              │     1 │   8.3 │   85 │ 66.9 │       0 │  0.0 │
-  │ HTML+Django/Jinja │     1 │   8.3 │   46 │ 86.8 │       0 │  0.0 │
-  │ __empty__         │     1 │   8.3 │    0 │  0.0 │       0 │  0.0 │
-  │ __duplicate__     │     1 │   8.3 │    0 │  0.0 │       0 │  0.0 │
-  ├───────────────────┼───────┼───────┼──────┼──────┼─────────┼──────┤
-  │ Sum               │    12 │ 100.0 │  365 │ 59.6 │      68 │ 11.1 │
-  └───────────────────┴───────┴───────┴──────┴──────┴─────────┴──────┘
-
-The tool extracts figure information and tables from ``.docx`` files, generates
-**HTML** and **JSON**, and validates the **JSON** using a **JSON** schema.
+**jugmt** is a minimalistic **spex** (SPecification EXtractor) implementation**
+**with a codebase less than **300** lines of Python. The tool extracts figure
+**information and tables from ``.docx`` files, generates HTML** and **JSON**,
+**and validates the **JSON** using a **JSON** schema.
 
 When running the tool on a collection of NVMe specification documents, including
 Base, Boot, MI, NVM, ZNS, KV, PCI, RDMA, and TCP, it consumes a total of **5
