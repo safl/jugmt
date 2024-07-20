@@ -228,7 +228,7 @@ class Document(JsonSchemaMixin):
             if existing:
                 existing.page_nr = figure.page_nr
                 if figure.description not in existing.description:
-                    errors["tof_entires"].append(
+                    errors["tof_entries"].append(
                         (
                             caption,
                             f"({existing.description}) != {figure.description}",
