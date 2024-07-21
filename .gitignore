@@ -1,5 +1,3 @@
-*.schema.json
-
 *.lcov
 
 docs/_build
