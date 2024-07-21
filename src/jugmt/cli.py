@@ -60,7 +60,7 @@ def main() -> int:
             document.to_html()
         )
         (args.output / path.stem).with_suffix(".figures.json").write_text(
-            document.json()
+            document.to_json()
         )
 
         if args.skip_validate:
