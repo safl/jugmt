@@ -39,18 +39,15 @@ def snake_to_pascal(name):
 
 
 class Cell(BaseModel):
-    key: str = "cell"
     text: str = Field(default_factory=str)
     tables: List["Table"] = Field(default_factory=list)
 
 
 class Row(BaseModel):
-    key: str = "row"
     cells: List[Cell] = Field(default_factory=list)
 
 
 class Table(BaseModel):
-    key: str = "table"
     rows: List[Row] = Field(default_factory=list)
 
     @classmethod
@@ -88,7 +85,6 @@ class Figure(BaseModel):
         r"\s*(?P<description>.*?))(?P<page_nr>\d+)?$"
     )
 
-    key: str  # Utilized fo de-serialization and document location
     figure_nr: int  # Figure as numbered in the specification document
     caption: str  # The entire figure title
     description: str  # The part of figure title without the "Fig X:" prefix
@@ -103,7 +99,6 @@ class Figure(BaseModel):
             return None
 
         args = {}
-        args["key"] = pascal_to_snake(cls.__name__)
         args["figure_nr"] = int(match.group("figure_nr"))
         args["caption"] = match.group("caption").strip()
         args["description"] = match.group("description").strip()
@@ -116,7 +111,6 @@ class Figure(BaseModel):
 
 
 class Meta(BaseModel):
-    key: str = "meta"
     version: str = jugmt.__version__
     stem: str = Field(default_factory=str)
 

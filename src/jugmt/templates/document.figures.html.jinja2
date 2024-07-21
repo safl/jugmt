@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>{{ document.stem }}</title>
+<title>{{ document.meta.stem }}</title>
 <style>
 table {
     border-collapse: collapse;
@@ -44,7 +44,7 @@ caption {
 
 {% for figure in document.figures %}
 <figure>
-<figcaption>{{ figure.title }}</figcaption>
+<figcaption>{{ figure.caption }}</figcaption>
 {{ render_table(figure.table) }}
 </figure>
 {% endfor %}

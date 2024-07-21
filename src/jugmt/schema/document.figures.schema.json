@@ -2,11 +2,6 @@
     "$defs": {
         "Cell": {
             "properties": {
-                "key": {
-                    "default": "cell",
-                    "title": "Key",
-                    "type": "string"
-                },
                 "text": {
                     "title": "Text",
                     "type": "string"
@@ -25,10 +20,6 @@
         "Figure": {
             "description": "A figure as captioned in the NVMe Specification Documents.\n\nEnsuring that the 'figure' being \"enriched\" is always available. Providing a\nfactory-method, constructing the class using 'figure' information, and enriched data\nfrom 'match.groupdict()'",
             "properties": {
-                "key": {
-                    "title": "Key",
-                    "type": "string"
-                },
                 "figure_nr": {
                     "title": "Figure Nr",
                     "type": "integer"
@@ -66,7 +57,6 @@
                 }
             },
             "required": [
-                "key",
                 "figure_nr",
                 "caption",
                 "description"
@@ -76,11 +66,6 @@
         },
         "Meta": {
             "properties": {
-                "key": {
-                    "default": "meta",
-                    "title": "Key",
-                    "type": "string"
-                },
                 "version": {
                     "default": "0.6.0",
                     "title": "Version",
@@ -96,11 +81,6 @@
         },
         "Row": {
             "properties": {
-                "key": {
-                    "default": "row",
-                    "title": "Key",
-                    "type": "string"
-                },
                 "cells": {
                     "items": {
                         "$ref": "#/$defs/Cell"
@@ -114,11 +94,6 @@
         },
         "Table": {
             "properties": {
-                "key": {
-                    "default": "table",
-                    "title": "Key",
-                    "type": "string"
-                },
                 "rows": {
                     "items": {
                         "$ref": "#/$defs/Row"
