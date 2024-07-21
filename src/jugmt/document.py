@@ -18,7 +18,7 @@ Assumptions
 
 import re
 from pathlib import Path
-from typing import ClassVar, Dict, List, Optional
+from typing import ClassVar, Dict, List, Optional, Union
 
 import docx
 from jinja2 import Environment, PackageLoader, select_autoescape
@@ -98,7 +98,9 @@ class Figure(BaseModel):
         if not match:
             return None
 
-        args = {}
+        args: Dict[
+            str, Union[int, str, Optional[Table], Optional[int], Optional[str]]
+        ] = {}
         args["figure_nr"] = int(match.group("figure_nr"))
         args["caption"] = match.group("caption").strip()
         args["description"] = match.group("description").strip()
