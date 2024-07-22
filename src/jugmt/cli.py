@@ -51,7 +51,7 @@ def parse_args() -> Namespace:
 
 
 def main() -> int:
-    """CLI entrypoint"""
+    """Command-line entrypoint"""
 
     args = parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
