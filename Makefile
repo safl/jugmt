@@ -44,3 +44,4 @@ bump:
 	make env uninstall build install
 	jugmt --dump-schema --output /tmp/
 	cp /tmp/figures.schema.json src/jugmt/schema/figures.schema.json
+	make
