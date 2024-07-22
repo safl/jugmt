@@ -35,7 +35,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--dump-schema",
         action="store_true",
-        help="dump schema({jugmt.schema.FILENAME}) and exit",
+        help=f"dump schema({jugmt.schema.FILENAME}) and exit",
     )
 
     args = parser.parse_args()
