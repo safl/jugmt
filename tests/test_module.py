@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-from jugmt.document import Document
+from jugmt.document import FigureDocument
 
 
 def test_module(tmp_path):
@@ -10,7 +10,7 @@ def test_module(tmp_path):
     assert len(paths) > 0, "No documents/*.docx available for testing"
 
     for path in paths:
-        document, errors = Document().from_docx(path)
+        document, errors = FigureDocument().from_docx(path)
 
         document_json_str = document.to_json()
         assert document_json_str, "Failed producing a string of JSON"

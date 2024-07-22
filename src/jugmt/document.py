@@ -117,11 +117,7 @@ class Meta(BaseModel):
     stem: str = Field(default_factory=str)
 
 
-class Document(BaseModel):
-    """
-    Wrapper of the docx.Document with additional path meta-data and figures with tabular
-    data converted to a JSON serializable format
-    """
+class FigureDocument(BaseModel):
 
     TEMPLATE_HTML: ClassVar[str] = "document.figures.html.jinja2"
 
@@ -212,7 +208,7 @@ class Document(BaseModel):
             loader=PackageLoader("jugmt", "templates"),
             autoescape=select_autoescape(["html", "xml"]),
         )
-        template = env.get_template(Document.TEMPLATE_HTML)
+        template = env.get_template(FigureDocument.TEMPLATE_HTML)
 
         return template.render(document=self)
 

@@ -9,7 +9,7 @@ import json
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
-from jugmt.document import Document
+from jugmt.document import FigureDocument
 
 SCHEMA_FILENAME = "document.figures.schema.json"
 
@@ -51,10 +51,10 @@ def main() -> int:
 
     if not args.skip_dump_schema:
         with (args.output / SCHEMA_FILENAME).open("w") as schema_file:
-            json.dump(Document.schema(), schema_file, indent=4)
+            json.dump(FigureDocument.schema(), schema_file, indent=4)
 
     for path in args.document:
-        document, errors = Document().from_docx(path)
+        document, errors = FigureDocument().from_docx(path)
 
         (args.output / path.stem).with_suffix(".figures.html").write_text(
             document.to_html()
