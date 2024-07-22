@@ -67,7 +67,7 @@
         "Meta": {
             "properties": {
                 "version": {
-                    "default": "0.7.2",
+                    "default": "0.7.3",
                     "title": "Version",
                     "type": "string"
                 },
