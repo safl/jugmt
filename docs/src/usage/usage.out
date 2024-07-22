@@ -10,5 +10,5 @@ options:
   -h, --help       show this help message and exit
   --output OUTPUT  directory where the output will be saved
   --skip-validate  skip post-parse validation
-  --dump-schema    dump schema({jugmt.schema.FILENAME}) and exit
+  --dump-schema    dump schema(figures.schema.json) and exit
 
