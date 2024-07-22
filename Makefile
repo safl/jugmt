@@ -12,11 +12,13 @@ env:
 	pipx install twine || true
 
 clean:
-	rm -r build || true
-	rm -r dist|| true
-	rm -r htmlcov || true
-	rm -r .mypy_cache || true
-	rm -r .pytest_cache || true
+	@rm coverage.lcov || true
+	@rm -r build || true
+	@rm -r .coverage || true
+	@rm -r dist|| true
+	@rm -r htmlcov || true
+	@rm -r .mypy_cache || true
+	@rm -r .pytest_cache || true
 
 build:
 	pyproject-build
