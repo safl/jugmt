@@ -1,6 +1,6 @@
 [project]
 name = "jugmt"
-version = "0.7.1"
+version = "0.7.2"
 description = "JUst Give Me Tables"
 authors = [
     { name = "Simon A. F. Lund", email = "os@safl.dk" }
