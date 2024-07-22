@@ -1,6 +1,6 @@
 PROJECT_NAME=jugmt
 
-.PHONY: all env build install uninstall test open format release
+.PHONY: all clean env build install uninstall test open format release
 
 all: env uninstall build install test open
 
