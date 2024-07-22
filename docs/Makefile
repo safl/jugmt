@@ -1,4 +1,5 @@
 # The builddir path is hardcoded in the config/doxy.conf and config/conf.py
+PROJECT_NAME:=jugmt
 BUILD_DIR?=_build
 CONFIG_DIR?=./
 DOCS_DIR?=src
@@ -31,5 +32,5 @@ linkcheck:
 	PATH="$(PATH):../src" ${PYTHON} -m sphinx -b linkcheck -c $(CONFIG_DIR) $(DOCS_DIR) $(BUILD_DIR)
 
 serve:
-	@screen -S jugmtdocs -X kill || echo "Could not kill server, probably not running"
-	@cd $(BUILD_DIR) && screen -S jugmtdocs -d -m python3 -m http.server 8888
+	@screen -S $(PROJECT_NAME)docs -X kill || echo "Could not kill server, probably not running"
+	@cd $(BUILD_DIR) && screen -S $(PROJECT_NAME)docs -d -m python3 -m http.server 8888
