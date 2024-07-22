@@ -37,9 +37,14 @@ def parse_args() -> Namespace:
         action="store_true",
         help=f"dump schema({jugmt.schema.FILENAME}) and exit",
     )
+    parser.add_argument(
+        "--version",
+        action="store_true",
+        help="print the version and exit",
+    )
 
     args = parser.parse_args()
-    if not args.document and not args.dump_schema:
+    if not args.document and not args.dump_schema and not args.version:
         parser.error("the following arguments are required: document")
 
     return args
@@ -50,6 +55,10 @@ def main() -> int:
 
     args = parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
+
+    if args.version:
+        print(jugmt.__version__)
+        return 0
 
     if args.dump_schema:
         FigureDocument.to_schema_file(args.output / jugmt.schema.FILENAME)
