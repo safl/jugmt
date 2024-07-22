@@ -38,3 +38,9 @@ format:
 
 release:
 	twine upload dist/*
+
+bump:
+	./toolbox/project_version_update.py
+	make env uninstall build install
+	jugmt --dump-schema --output /tmp/
+	cp /tmp/figures.schema.json src/jugmt/schema/figures.schema.json

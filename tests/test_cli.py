@@ -3,6 +3,21 @@ from pathlib import Path
 from subprocess import run
 
 
+def test_cli_tool_example():
+
+    paths = list(Path("example").resolve().glob("*.docx"))
+    assert len(paths) > 0, "No documents/*.docx available for testing"
+
+    for path in paths:
+        result = run(
+            ["jugmt", f"{path}", "--output", str(path.with_name("output"))],
+            capture_output=True,
+            text=True,
+        )
+
+        assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
+
+
 def test_cli_tool(tmp_path):
 
     paths = list(Path("example").resolve().glob("*.docx"))
