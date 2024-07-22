@@ -19,7 +19,7 @@ Assumptions
 import json
 import re
 from pathlib import Path
-from typing import ClassVar, Dict, List, Optional, Union
+from typing import ClassVar, Dict, List, Optional
 
 import docx
 from jinja2 import Environment, PackageLoader, select_autoescape
@@ -82,11 +82,13 @@ class Figure(BaseModel):
     from 'match.groupdict()'
     """
 
-    REGEX_FIGURE_CAPTION: ClassVar[str] = (
+    REGEX_TABLE_OF_FIGURES: ClassVar[str] = (
         r"^(?P<caption>Figure\s+(?P<figure_nr>\d+)\s*:"
         r"\s*(?P<description>.*?))(?P<page_nr>\d+)?$"
     )
-
+    REGEX_TABLE_ROW: ClassVar[str] = (
+        r"^(?P<caption>Figure\s+(?P<figure_nr>\d+)\s*:" r"\s*(?P<description>.*?))$"
+    )
     figure_nr: int  # Figure as numbered in the specification document
     caption: str  # The entire figure title
     description: str  # The part of figure title without the "Fig X:" prefix
@@ -95,23 +97,22 @@ class Figure(BaseModel):
     table: Optional[Table] = None
 
     @classmethod
-    def from_figure_caption(cls, text: str):
-        match = re.match(Figure.REGEX_FIGURE_CAPTION, text)
+    def from_regex_match(cls, regex, text):
+        match = re.match(regex, text)
         if not match:
             return None
 
-        args: Dict[
-            str, Union[int, str, Optional[Table], Optional[int], Optional[str]]
-        ] = {}
-        args["figure_nr"] = int(match.group("figure_nr"))
-        args["caption"] = match.group("caption").strip()
-        args["description"] = match.group("description").strip()
-        args["page_nr"] = (
-            int(match.group("page_nr")) if match.group("page_nr") else None
-        )
-        args["table"] = None
+        data = {
+            "figure_nr": int(match.group("figure_nr")),
+            "caption": match.group("caption").strip(),
+            "description": match.group("description").strip(),
+            "table": None,
+            "page_nr": None,
+        }
+        if match.group("page_nr"):
+            data["page_nr"] = int(match.group("page_nr"))
 
-        return cls(**args)
+        return cls(**data)
 
 
 class Meta(BaseModel):
@@ -153,7 +154,7 @@ class FigureDocument(BaseModel):
         for table_nr, docx_table in enumerate(docx_document.tables, 1):
             caption = str(docx_table.rows[0].cells[0].text).strip()
 
-            figure = Figure.from_figure_caption(caption)
+            figure = Figure.from_regex_match(Figure.REGEX_TABLE_ROW, caption)
             if not figure:
                 errors["captions"].append(
                     (table_nr, caption, "Does not match figure caption assumptions")
@@ -185,7 +186,7 @@ class FigureDocument(BaseModel):
 
             # Check whether the paragraph is a reference to a figure
             caption = paragraph.text.strip()
-            figure = Figure.from_figure_caption(caption)
+            figure = Figure.from_regex_match(Figure.REGEX_TABLE_OF_FIGURES, caption)
             if not figure:
                 errors["tof_entries"].append(
                     (caption, "Does not match figure assumptions")
