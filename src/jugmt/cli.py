@@ -5,13 +5,11 @@ Command-Line Interface
 Produces .html and .json when given .docx documents
 """
 
-import json
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
+import jugmt.schema
 from jugmt.document import FigureDocument
-
-SCHEMA_FILENAME = "document.figures.schema.json"
 
 
 def parse_args() -> Namespace:
@@ -21,7 +19,7 @@ def parse_args() -> Namespace:
         description="Extract table information from .docx documents"
     )
     parser.add_argument(
-        "document", nargs="+", type=Path, help="path to one or more .docx document(s)"
+        "document", nargs="*", type=Path, help="path to one or more .docx document(s)"
     )
     parser.add_argument(
         "--output",
@@ -32,15 +30,19 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--skip-validate",
         action="store_true",
-        help="skip validation if this flag is set.",
+        help="skip post-parse validation",
     )
     parser.add_argument(
-        "--skip-dump-schema",
+        "--dump-schema",
         action="store_true",
-        help=f"skip dumping the schema({SCHEMA_FILENAME})",
+        help="dump schema({jugmt.schema.FILENAME}) and exit",
     )
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    if not args.document and not args.dump_schema:
+        parser.error("the following arguments are required: document")
+
+    return args
 
 
 def main() -> int:
@@ -49,9 +51,9 @@ def main() -> int:
     args = parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
 
-    if not args.skip_dump_schema:
-        with (args.output / SCHEMA_FILENAME).open("w") as schema_file:
-            json.dump(FigureDocument.schema(), schema_file, indent=4)
+    if args.dump_schema:
+        FigureDocument.to_schema_file(args.output / jugmt.schema.FILENAME)
+        return 0
 
     for path in args.document:
         document, errors = FigureDocument().from_docx(path)

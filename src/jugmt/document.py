@@ -16,6 +16,7 @@ Assumptions
   - 'Figure <figure_number>: <description> <page_nr>'
 """
 
+import json
 import re
 from pathlib import Path
 from typing import ClassVar, Dict, List, Optional, Union
@@ -25,6 +26,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 from pydantic import BaseModel, Field, ValidationError
 
 import jugmt
+import jugmt.schema
 
 
 def pascal_to_snake(name):
@@ -123,6 +125,14 @@ class FigureDocument(BaseModel):
 
     meta: Meta = Field(default_factory=Meta)
     figures: List[Figure] = Field(default_factory=list)
+
+    @classmethod
+    def to_schema_file(cls, path: Optional[Path] = None):
+        if path is None:
+            path = Path.cwd() / jugmt.schema.FILENAME
+
+        with path.open("w") as schema_file:
+            json.dump(cls.schema(), schema_file, indent=4)
 
     @classmethod
     def from_docx(cls, path: Path):

@@ -17,7 +17,5 @@ def get_schema() -> Dict[str, Any]:
         Dict[str, Any]: The JSON Schema as a dictionary.
     """
 
-    with pkg_resources.open_text(
-        jugmt.schema, "document.figures.schema.json"
-    ) as content:
+    with pkg_resources.open_text(jugmt.schema, jugmt.schema.FILENAME) as content:
         return json.load(content)
