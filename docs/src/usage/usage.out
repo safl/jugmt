@@ -1,14 +1,14 @@
-usage: jugmt [-h] [--output OUTPUT] [--skip-validate] [--skip-dump-schema]
-             document [document ...]
+usage: jugmt [-h] [--output OUTPUT] [--skip-validate] [--dump-schema]
+             [document ...]
 
 Extract table information from .docx documents
 
 positional arguments:
-  document            path to one or more .docx document(s)
+  document         path to one or more .docx document(s)
 
 options:
-  -h, --help          show this help message and exit
-  --output OUTPUT     directory where the output will be saved
-  --skip-validate     skip validation if this flag is set.
-  --skip-dump-schema  skip dumping the schema(document.figures.schema.json)
+  -h, --help       show this help message and exit
+  --output OUTPUT  directory where the output will be saved
+  --skip-validate  skip post-parse validation
+  --dump-schema    dump schema({jugmt.schema.FILENAME}) and exit
 
