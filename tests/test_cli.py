@@ -26,7 +26,9 @@ def test_cli_tool_skip_dump_schema(tmp_path):
     for path in paths:
 
         result = run(
-            ["jugmt", f"{path}", "--skip-dump-schema"], capture_output=True, text=True
+            ["jugmt", f"{path}", "--skip-dump-schema", "--output", str(tmp_path)],
+            capture_output=True,
+            text=True,
         )
 
         assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
@@ -39,7 +41,9 @@ def test_cli_tool_skip_validate(tmp_path):
     for path in paths:
 
         result = run(
-            ["jugmt", f"{path}", "--skip-validate"], capture_output=True, text=True
+            ["jugmt", f"{path}", "--skip-validate", "--output", str(tmp_path)],
+            capture_output=True,
+            text=True,
         )
 
         assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
