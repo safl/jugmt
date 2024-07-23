@@ -1,1 +1,0 @@
-FILENAME = "figures.schema.json"

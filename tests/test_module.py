@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-from jugmt.document import FigureDocument
+from senfd.documents import FigureDocument
+
+from jugmt.cli import docx_to_figure_document
 
 
 def test_module(tmp_path):
@@ -10,7 +12,7 @@ def test_module(tmp_path):
     assert len(paths) > 0, "No documents/*.docx available for testing"
 
     for path in paths:
-        document, errors = FigureDocument().from_docx(path)
+        document, errors = docx_to_figure_document(path)
 
         document_json_str = document.to_json()
         assert document_json_str, "Failed producing a string of JSON"
@@ -18,6 +20,6 @@ def test_module(tmp_path):
         document_html_str = document.to_html()
         assert document_html_str, "Failed producing a string of HTML"
 
-        assert document.check(), "Unexpected failure"
+        assert document.is_valid(), "Unexpected failure"
 
-        assert len(document.figures) == 2, "Unexpected amouni of figures in document"
+        assert len(document.figures) == 2, "Unexpected amount of figures in document"
