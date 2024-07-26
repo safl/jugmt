@@ -43,7 +43,4 @@ release:
 
 bump:
 	./toolbox/project_version_update.py
-	make env uninstall build install
-	$(PROJECT_NAME) --dump-schema --output /tmp/
-	cp /tmp/figures.schema.json src/$(PROJECT_NAME)/schema/figures.schema.json
 	make
