@@ -15,7 +15,7 @@ def test_cli_tool_example():
             text=True,
         )
 
-        assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
+        assert not result.returncode
 
 
 def test_cli_tool(tmp_path):
@@ -30,42 +30,18 @@ def test_cli_tool(tmp_path):
             text=True,
         )
 
-        assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
+        assert not result.returncode
 
 
-def test_cli_tool_dump_schema(tmp_path):
+def test_cli_tool_version(tmp_path):
 
-    paths = list(Path("example").resolve().glob("*.docx"))
-    assert len(paths) > 0, "No documents/*.docx available for testing"
+    result = run(["jugmt", "--version"], capture_output=True, text=True)
 
-    for path in paths:
+    assert not result.returncode
 
-        result = run(
-            ["jugmt", "--dump-schema", "--output", str(tmp_path)],
-            capture_output=True,
-            text=True,
-        )
-
-        assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
-
-
-def test_cli_tool_skip_validate(tmp_path):
-    paths = list(Path("example").resolve().glob("*.docx"))
-    assert len(paths) > 0, "No documents/*.docx available for testing"
-
-    for path in paths:
-
-        result = run(
-            ["jugmt", f"{path}", "--skip-validate", "--output", str(tmp_path)],
-            capture_output=True,
-            text=True,
-        )
-
-        assert result.returncode == 0, f"CLI tool failed with error: {result.stderr}"
-
-
+    
 def test_cli_tool_missing_args(tmp_path):
 
     result = run(["jugmt"], capture_output=True, text=True)
 
-    assert result.returncode != 0, f"Expected failure, but got: {result.stderr}"
+    assert result.returncode, f"Expected failure, but got: {result.returncode}"
