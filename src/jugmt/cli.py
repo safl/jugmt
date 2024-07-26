@@ -132,11 +132,6 @@ def parse_args() -> Namespace:
         default=Path("output"),
     )
     parser.add_argument(
-        "--skip-validate",
-        action="store_true",
-        help="skip post-parse validation",
-    )
-    parser.add_argument(
         "--dump-schema",
         action="store_true",
         help=f"dump schema({FigureDocument.FILENAME_SCHEMA}) and exit",
@@ -170,13 +165,7 @@ def main() -> int:
 
     for path in args.document:
         document, errors = docx_to_figure_document(path)
-        document.to_html_file(args.output / document.get_html_filename())
-        document.to_json_file(args.output / document.get_json_filename())
-
-        if args.skip_validate:
-            continue
-
-        if document.is_valid():
-            print("Document is invalid, see above for details.")
+        document.to_html_file(args.output)
+        document.to_json_file(args.output)
 
     return 0
