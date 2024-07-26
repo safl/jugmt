@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-from senfd.documents import FigureDocument
-
 from jugmt.cli import docx_to_figure_document
 
 

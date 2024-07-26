@@ -39,7 +39,7 @@ def test_cli_tool_version(tmp_path):
 
     assert not result.returncode
 
-    
+
 def test_cli_tool_missing_args(tmp_path):
 
     result = run(["jugmt"], capture_output=True, text=True)
