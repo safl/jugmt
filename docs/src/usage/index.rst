@@ -26,8 +26,8 @@ folder and store **JSON** and **HTML** versions of the documents in the folder
 named ``/tmp/foo```.
 
 In case you do not want to run it, then you can inspect the
-`JSON <https://github.com/safl/jugmt/blob/main/example/output/figure_example.json>`_
-and  `HTML <https://github.com/safl/jugmt/blob/main/example/output/figure_example.html>`_ 
+`JSON <https://github.com/safl/jugmt/blob/main/example/output/example.figure.document.json>`_
+and  `HTML <https://github.com/safl/jugmt/blob/main/example/output/example.figure.document.html>`_ 
 in the
 `repository on GitHUB <https://github.com/safl/jugmt/tree/main/example/output>`_
 or locally in the folder ``example/output``.

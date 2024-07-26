@@ -21,7 +21,7 @@ jugmt: JUst Give Me Tables
     :alt: License
 
 **jugmt** is a minimalistic **spex** (SPecification EXtractor) implementation
-with a codebase less than **300** lines of Python. The tool extracts figure
+with a codebase less than **200** lines of Python. The tool extracts figure
 information and tables from ``.docx`` files, generates **HTML** and **JSON**,
 and validates the **JSON** using a **JSON** schema.
 
