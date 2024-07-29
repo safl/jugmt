@@ -10,7 +10,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import docx
-from senfd.documents import DocumentMeta, FigureDocument
+from senfd.documents.base import DocumentMeta
+from senfd.documents.figure import FigureDocument
 from senfd.figures import Figure
 from senfd.tables import Cell, Row, Table
 
